@@ -1,3 +1,5 @@
+ca-certificate.crt
+*.csv
 node_modules
 .env
 .cache
