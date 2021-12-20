@@ -1,4 +1,10 @@
-module.exports = (namespace) => {
+const mongodb = require("./database");
+
+module.exports = async (namespace) => {
+  const db = await mongodb();
+  //const db = test.db();
+  const collection = db.collection("templates");
+  const changeStream = collection.watch({ fullDocument: "updateLookup" });
   namespace.on("connection", async (socket) => {
     const eventSpace = socket.nsp;
     const eventId = socket.nsp.name;
@@ -8,8 +14,6 @@ module.exports = (namespace) => {
       console.log(reason);
     });
 
-    const collection = socket.db.collection("sessions");
-    const changeStream = collection.watch({ fullDocument: "updateLookup" });
     changeStream.on("change", (next) => {
       eventSpace.emit("UPDATE", next.fullDocument);
       console.log(next.fullDocument);
