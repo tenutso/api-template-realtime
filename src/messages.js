@@ -1,8 +1,4 @@
-const mongodb = require("./database");
-
-module.exports = async (namespace) => {
-  const db = await mongodb();
-  //const db = test.db();
+const initialize = async (namespace, db) => {
   const collection = db.collection("templates");
   const changeStream = collection.watch({ fullDocument: "updateLookup" });
   namespace.on("connection", async (socket) => {
@@ -20,3 +16,4 @@ module.exports = async (namespace) => {
     });
   });
 };
+module.exports = { initialize };
